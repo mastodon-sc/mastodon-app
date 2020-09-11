@@ -134,5 +134,9 @@
 			<groupId>org.mastodon</groupId>
 			<artifactId>mastodon-tracking</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.mastodon</groupId>
+			<artifactId>mastodon-selection-creator</artifactId>
+		</dependency>
 	</dependencies>
 </project>
