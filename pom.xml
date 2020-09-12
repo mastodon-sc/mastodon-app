@@ -12,8 +12,6 @@
 
 	<artifactId>mastodon-app</artifactId>
 
-	<packaging>pom</packaging>
-
 	<name>Mastodon App</name>
 	<description>Mastodon – a large-scale tracking and track-editing framework for large, multi-view images.</description>
 	<url>https://github.com/mastodon-sc/mastodon</url>
@@ -42,7 +40,7 @@
 
 	</properties>
 
-	<build>
+<!-- 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -62,7 +60,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 
 	<mailingLists>
 		<mailingList>
