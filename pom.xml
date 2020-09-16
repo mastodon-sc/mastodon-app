@@ -28,7 +28,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<properties>
 
 		<package-name>org.mastodon</package-name>
@@ -127,16 +127,36 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.mastodon</groupId>
+			<groupId>${mastodon.group}</groupId>
+			<artifactId>mastodon-collection</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${mastodon.group}</groupId>
+			<artifactId>mastodon-graph</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mastodon</groupId>
+			<groupId>${mastodon.group}</groupId>
+			<artifactId>mastodon-ellipsoid-fitting</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-tracking</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mastodon</groupId>
+			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-selection-creator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${mastodon.group}</groupId>
+			<artifactId>mastodon-pasteur</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${mastodon.group}</groupId>
+			<artifactId>mastodon-tomancak</artifactId>
 		</dependency>
 	</dependencies>
 </project>
