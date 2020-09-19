@@ -94,6 +94,7 @@ public class Mamut
 
 	public static final Mamut open( final String mamutProject, final Context context ) throws IOException, SpimDataException
 	{
+		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
 		final MamutProject project = new MamutProjectIO().load( mamutProject );
 		final WindowManager wm = new WindowManager( context );
 		wm.getProjectManager().open( project );
@@ -102,6 +103,7 @@ public class Mamut
 
 	public static final Mamut newProject( final String bdvFile, final Context context ) throws IOException, SpimDataException
 	{
+		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
 		final WindowManager wm = new WindowManager( context );
 		final MamutProject project = new MamutProject( null, new File( bdvFile ) );
 		wm.getProjectManager().open( project );
