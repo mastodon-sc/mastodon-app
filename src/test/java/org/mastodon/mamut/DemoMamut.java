@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mastodon.tracking.mamut.detection.AdvancedDoGDetectorMamut;
-import org.mastodon.tracking.mamut.trackmate.TrackMate;
 import org.scijava.log.Logger;
 
 import mpicbg.spim.data.SpimDataException;
@@ -44,19 +42,17 @@ public class DemoMamut
 
 		mamut.clear();
 
-		final TrackMate trackmate = mamut.createTrackMate();
-		trackmate.getSettings().detector( AdvancedDoGDetectorMamut.class );
-		trackmate.getSettings().values.getDetectorSettings().put( "RADIUS", 8. );
-		trackmate.getSettings().values.getDetectorSettings().put( "THRESHOLD", 200. );
-		trackmate.getSettings().values.getDetectorSettings().put( "ADD_BEHAVIOR", "DONTADD" );
+		final TrackMateProxy trackmate = mamut.createTrackMate();
 
+		trackmate.infoDetectors();
+//		trackmate.infoLinkers();
+
+		trackmate.useDetector( "Advanced DoG detector" );
+		trackmate.setDetectorSetting( "RADIUS", 8. );
+		trackmate.setDetectorSetting( "THRESHOLD", 200. );
+		trackmate.setDetectorSetting( "ADD_BEHAVIOR", "DONTADD" );
+		trackmate.info();
 		trackmate.run();
-		if ( trackmate.isCanceled() )
-			System.out.println( "Calculation was canceled. Reason: " + trackmate.getCancelReason() );
-		else if ( !trackmate.isSuccessful() )
-			System.out.println( "Calculation failed with error message:\n" + trackmate.getErrorMessage() );
-		else
-			System.out.println( "Calculation complete." );
 
 		/*
 		 * Feature computation.

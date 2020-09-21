@@ -38,19 +38,15 @@ logger.info( "\n-------------------------------------\n" )
 #mamut.clear()
 
 trackmate = mamut.createTrackMate()
-trackmate.getSettings().detector( AdvancedDoGDetectorMamut )
-detector_settings = trackmate.getSettings().values.getDetectorSettings()
-detector_settings[ "RADIUS" ] = 8. 
-detector_settings[ "THRESHOLD" ] = 200.
-detector_settings[ "ADD_BEHAVIOR" ] = "DONTADD"
+trackmate.infoDetectors();
+#	trackmate.infoLinkers();
 
-trackmate.run()
-if trackmate.isCanceled():
-	logger.warn( "Tracking was canceled. Reason: " + trackmate.getCancelReason() )
-elif not trackmate.isSuccessful():
-	logger.error( "Tracking failed with error message:\n" + trackmate.getErrorMessage() )
-else:
-	logger.info( "Tracking complete.\n" )
+trackmate.useDetector( "Advanced DoG detector" );
+trackmate.setDetectorSetting( "RADIUS", 8. );
+trackmate.setDetectorSetting( "THRESHOLD", 200. );
+trackmate.setDetectorSetting( "ADD_BEHAVIOR", "DONTADD" );
+trackmate.info();
+trackmate.run();
 
 
 #------------------------------------------------------------------
