@@ -404,7 +404,7 @@ public class Mamut
 	 * TrackMate methods.
 	 */
 
-	public TrackMate createTrackMate()
+	public TrackMateProxy createTrackMate()
 	{
 		final SharedBigDataViewerData imageData = wm.getAppModel().getSharedBdvData();
 		final int numTimepoints = imageData.getNumTimepoints();
@@ -425,12 +425,12 @@ public class Mamut
 		final TrackMate trackmate = new TrackMate( settings, getModel(), getSelectionModel() );
 		trackmate.setContext( wm.getContext() );
 		trackmate.setLogger( logger );
-		return trackmate;
+		return new TrackMateProxy( trackmate, logger );
 	}
 
 	public void detect( final double radius, final double threshold )
 	{
-		final TrackMate trackmate = createTrackMate();
+		final TrackMate trackmate = createTrackMate().trackmate;
 		trackmate.getSettings().values.getDetectorSettings().put( DetectorKeys.KEY_RADIUS, Double.valueOf( radius ) );
 		trackmate.getSettings().values.getDetectorSettings().put( DetectorKeys.KEY_THRESHOLD, Double.valueOf( threshold ) );
 		trackmate.execDetection();
@@ -438,7 +438,7 @@ public class Mamut
 
 	public void link( final double maxLinkingDistance, final int maxFrameGap )
 	{
-		final TrackMate trackmate = createTrackMate();
+		final TrackMate trackmate = createTrackMate().trackmate;
 		trackmate.getSettings().values.getLinkerSettings().put( LinkerKeys.KEY_LINKING_MAX_DISTANCE, Double.valueOf( maxLinkingDistance ) );
 		trackmate.getSettings().values.getLinkerSettings().put( LinkerKeys.KEY_GAP_CLOSING_MAX_DISTANCE, Double.valueOf( maxLinkingDistance ) );
 		trackmate.getSettings().values.getLinkerSettings().put( LinkerKeys.KEY_GAP_CLOSING_MAX_FRAME_GAP, Integer.valueOf( maxFrameGap ) );
