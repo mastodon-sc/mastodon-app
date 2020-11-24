@@ -1,8 +1,6 @@
 #@ Context context
 
 from org.mastodon.mamut import Mamut
-from org.mastodon.tracking.mamut.detection import AdvancedDoGDetectorMamut
-
 
 # If you want to open an existing Mastodon file, here is the command.
 # newMastodonFile = "/Users/tinevez/Development/Mastodon/mastodon/samples/test_scripting.mastodon";
