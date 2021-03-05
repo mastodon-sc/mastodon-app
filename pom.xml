@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>29.2.1</version>
+		<version>30.0.0</version>
 	</parent>
 	
 	<groupId>org.mastodon</groupId>
@@ -33,13 +33,13 @@
 	
 		<mastodon.group>org.mastodon</mastodon.group>
 		<mastodon-collection.version>1.0.0-beta-19</mastodon-collection.version>
-		<mastodon-graph.version>1.0.0-beta-18-SNAPSHOT</mastodon-graph.version>
-		<mastodon.version>1.0.0-beta-17-SNAPSHOT</mastodon.version>
-		<mastodon-ellipsoid-fitting.version>0.2.5-SNAPSHOT</mastodon-ellipsoid-fitting.version>
-		<mastodon-tracking.version>1.0.0-beta-7-SNAPSHOT</mastodon-tracking.version>
-		<mastodon-selection-creator.version>0.0.2-SNAPSHOT</mastodon-selection-creator.version>
-		<mastodon-pasteur.version>1.0.0-beta-2-SNAPSHOT</mastodon-pasteur.version>
-		<mastodon-tomancak.version>0.1.2-SNAPSHOT</mastodon-tomancak.version>
+		<mastodon-graph.version>1.0.0-beta-18</mastodon-graph.version>
+		<mastodon.version>1.0.0-beta-18-SNAPSHOT</mastodon.version>
+		<mastodon-ellipsoid-fitting.version>0.3.0-SNAPSHOT</mastodon-ellipsoid-fitting.version>
+		<mastodon-tracking.version>1.0.0-beta-8-SNAPSHOT</mastodon-tracking.version>
+		<mastodon-selection-creator.version>0.0.3-SNAPSHOT</mastodon-selection-creator.version>
+		<mastodon-pasteur.version>1.0.0-beta-3-SNAPSHOT</mastodon-pasteur.version>
+		<mastodon-tomancak.version>0.2.0-SNAPSHOT</mastodon-tomancak.version>
 
 		<package-name>org.mastodon</package-name>
 
