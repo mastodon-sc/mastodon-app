@@ -40,6 +40,8 @@
 		<mastodon-selection-creator.version>0.0.3-SNAPSHOT</mastodon-selection-creator.version>
 		<mastodon-pasteur.version>1.0.0-beta-3-SNAPSHOT</mastodon-pasteur.version>
 		<mastodon-tomancak.version>0.2.0-SNAPSHOT</mastodon-tomancak.version>
+		
+		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
 
 		<package-name>org.mastodon</package-name>
 
