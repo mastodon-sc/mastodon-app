@@ -40,7 +40,7 @@
 		<mastodon-selection-creator.version>0.0.3</mastodon-selection-creator.version>
 		<mastodon-pasteur.version>1.0.0-beta-3</mastodon-pasteur.version>
 		<mastodon-tomancak.version>0.2.0</mastodon-tomancak.version>
-
+		
 		<package-name>org.mastodon</package-name>
 
 		<license.licenseName>bsd_2</license.licenseName>
