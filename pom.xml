@@ -34,16 +34,16 @@
 		<mastodon.group>org.mastodon</mastodon.group>
 		<mastodon-collection.version>1.0.0-beta-19</mastodon-collection.version>
 		<mastodon-graph.version>1.0.0-beta-18</mastodon-graph.version>
-		<mastodon.version>1.0.0-beta-18-SNAPSHOT</mastodon.version>
-		<mastodon-ellipsoid-fitting.version>0.3.0-SNAPSHOT</mastodon-ellipsoid-fitting.version>
-		<mastodon-tracking.version>1.0.0-beta-8-SNAPSHOT</mastodon-tracking.version>
-		<mastodon-selection-creator.version>0.0.3-SNAPSHOT</mastodon-selection-creator.version>
-		<mastodon-pasteur.version>1.0.0-beta-3-SNAPSHOT</mastodon-pasteur.version>
-		<mastodon-tomancak.version>0.2.0-SNAPSHOT</mastodon-tomancak.version>
+		<mastodon.version>1.0.0-beta-18</mastodon.version>
+		<mastodon-ellipsoid-fitting.version>0.3.0</mastodon-ellipsoid-fitting.version>
+		<mastodon-tracking.version>1.0.0-beta-8</mastodon-tracking.version>
+		<mastodon-selection-creator.version>0.0.3</mastodon-selection-creator.version>
+		<mastodon-pasteur.version>1.0.0-beta-3</mastodon-pasteur.version>
+		<mastodon-tomancak.version>0.2.0</mastodon-tomancak.version>
 
 		<package-name>org.mastodon</package-name>
 
-		<license.licenseName>not licensed yet</license.licenseName>
+		<license.licenseName>bsd_2</license.licenseName>
 		<license.projectName>Mastodon</license.projectName>
 		<license.organizationName>Mastodon authors</license.organizationName>
 		<license.copyrightOwners>Tobias Pietzsch, Jean-Yves Tinevez</license.copyrightOwners>
