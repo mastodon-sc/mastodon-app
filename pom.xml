@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	
 	<parent>
-		<groupId>org.mastodon</groupId>
-		<artifactId>pom-mastodon</artifactId>
-		<version>1.0.0-beta-1-SNAPSHOT</version>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>30.0.0</version>
 	</parent>
-
+	
+	<groupId>org.mastodon</groupId>
 	<artifactId>mastodon-app</artifactId>
+	<version>1.0.0-beta-20-SNAPSHOT</version>
 
 	<name>Mastodon App</name>
 	<description>Mastodon – a large-scale tracking and track-editing framework for large, multi-view images.</description>
@@ -28,10 +28,20 @@
 	</licenses>
 
 	<properties>
-
+	
+		<mastodon.group>org.mastodon</mastodon.group>
+		<mastodon-collection.version>1.0.0-beta-22</mastodon-collection.version>
+		<mastodon-graph.version>1.0.0-beta-20</mastodon-graph.version>
+		<mastodon.version>1.0.0-beta-19</mastodon.version>
+		<mastodon-ellipsoid-fitting.version>0.3.1</mastodon-ellipsoid-fitting.version>
+		<mastodon-tracking.version>1.0.0-beta-9</mastodon-tracking.version>
+		<mastodon-selection-creator.version>0.0.4</mastodon-selection-creator.version>
+		<mastodon-pasteur.version>1.0.0-beta-4</mastodon-pasteur.version>
+		<mastodon-tomancak.version>0.2.1</mastodon-tomancak.version>
+		
 		<package-name>org.mastodon</package-name>
 
-		<license.licenseName>not licensed yet</license.licenseName>
+		<license.licenseName>bsd_2</license.licenseName>
 		<license.projectName>Mastodon</license.projectName>
 		<license.organizationName>Mastodon authors</license.organizationName>
 		<license.copyrightOwners>Tobias Pietzsch, Jean-Yves Tinevez</license.copyrightOwners>
@@ -40,27 +50,7 @@
 
 	</properties>
 
-<!-- 	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>distro-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>src/assembly/assembly.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build> -->
+
 
 	<mailingLists>
 		<mailingList>
@@ -124,37 +114,52 @@
 	</repositories>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-collection</artifactId>
+			<version>${mastodon-collection.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-graph</artifactId>
+			<version>${mastodon-graph.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon</artifactId>
+			<version>${mastodon.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-ellipsoid-fitting</artifactId>
+			<version>${mastodon-ellipsoid-fitting.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-tracking</artifactId>
+			<version>${mastodon-tracking.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-selection-creator</artifactId>
+			<version>${mastodon-selection-creator.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-pasteur</artifactId>
+			<version>${mastodon-pasteur.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-tomancak</artifactId>
+			<version>${mastodon-tomancak.version}</version>
 		</dependency>
 	</dependencies>
 </project>
