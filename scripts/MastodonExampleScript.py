@@ -7,7 +7,7 @@ from org.mastodon.mamut import Mamut
 # Mamut.open( newMastodonFile, context )
 
 # But in the following we will start from an image.
-bdvFile = "/Users/tinevez/Development/Mastodon/mastodon/samples/datasethdf5.xml"
+bdvFile = "/Users/tinevez/Development/MastodonWS/mastodon/samples/datasethdf5.xml"
 mamut = Mamut.newProject( bdvFile, context )
 logger = mamut.getLogger()
 
@@ -56,7 +56,9 @@ logger.info( "\n  Feature computation" )
 logger.info( "\n-------------------------------------\n" )
 
 mamut.infoFeatures()
-mamut.computeFeatures( "Spot position", "Spot radius", "Dummy" )
+mamut.computeFeatures( "Spot intensity", "Dummy", "Branch N spots" )
+# It will complain about being un able to find a computer for the feature called "Dummy"
+
 
 
 #------------------------------------------------------------------
@@ -120,7 +122,10 @@ mamut.setTagColor( "Fruits", "Banana", 200, 200, 0 )
 mamut.setTagColor( "Fruits", "Kiwi", 0, 200, 0 )
 
 mamut.infoTags()
-mamut.computeFeatures( "Spot position", "Spot frame", "Spot N links" )
+
+# Below, we use features that are computed on the fly for selection.
+# So we do not have to explicitely call for mamut.computeFeatures() 
+# to use them.
 
 mamut.select( "vertexFeature('Spot position' ,'X' ) > 100." )
 mamut.tagSelectionWith( "Fruits", "Kiwi" )
@@ -129,7 +134,7 @@ mamut.select( "vertexFeature('Spot frame' ) == 25" )
 mamut.tagSelectionWith( "Fruits", "Banana" )
 
 mamut.select( "vertexFeature('Spot N links' ) == 1" )
-mamut.tagSelectionWith( "Fruits", "Apple" );
+mamut.tagSelectionWith( "Fruits", "Apple" )
 
 mamut.resetSelection()
 
@@ -143,7 +148,7 @@ logger.info( "\n  Saving and loading" )
 logger.info( "\n-------------------------------------\n" )
 
 mamut.save()
-newMastodonFile = "/Users/tinevez/Development/Mastodon/mastodon/samples/test_scripting.mastodon"
+newMastodonFile = "/Users/tinevez/Development/MastodonWS/mastodon/samples/test_scripting.mastodon"
 mamut.saveAs( newMastodonFile )
 
 
