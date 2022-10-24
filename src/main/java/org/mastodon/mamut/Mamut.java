@@ -82,6 +82,7 @@ import org.scijava.log.LogMessage;
 import org.scijava.log.Logger;
 import org.scijava.module.ModuleItem;
 
+import loci.formats.FormatException;
 import mpicbg.spim.data.SpimDataException;
 
 public class Mamut
@@ -115,12 +116,12 @@ public class Mamut
 		this.ID = IDGENERATOR.getAndIncrement();
 	}
 
-	public static final Mamut open( final String mamutProject ) throws IOException, SpimDataException
+	public static final Mamut open( final String mamutProject ) throws IOException, SpimDataException, FormatException
 	{
 		return open( mamutProject, new Context() );
 	}
 
-	public static final Mamut open( final String mamutProject, final Context context ) throws IOException, SpimDataException
+	public static final Mamut open( final String mamutProject, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
 		final MamutProject project = new MamutProjectIO().load( mamutProject );
@@ -129,7 +130,7 @@ public class Mamut
 		return new Mamut( wm );
 	}
 
-	public static final Mamut newProject( final String bdvFile, final Context context ) throws IOException, SpimDataException
+	public static final Mamut newProject( final String bdvFile, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
 		final WindowManager wm = new WindowManager( context );
@@ -138,7 +139,7 @@ public class Mamut
 		return new Mamut( wm );
 	}
 
-	public static final Mamut newProject( final String bdvFile ) throws IOException, SpimDataException
+	public static final Mamut newProject( final String bdvFile ) throws IOException, SpimDataException, FormatException
 	{
 		return newProject( bdvFile, new Context() );
 	}
@@ -180,27 +181,29 @@ public class Mamut
 	 * Output.
 	 */
 
-	public void save()
+	public boolean save()
 	{
 		final File projectFile = wm.getProjectManager().getProject().getProjectRoot();
 		if ( projectFile == null )
 		{
 			logger.warn( "Mastodon file not set. Please use #saveAs() first.\n" );
-			return;
+			return false;
 		}
-		saveAs( projectFile.getAbsolutePath() );
+		return saveAs( projectFile.getAbsolutePath() );
 	}
 
-	public void saveAs( final String mastodonFile )
+	public boolean saveAs( final String mastodonFile )
 	{
 		logger.info( "Saving to " + mastodonFile + '\n' );
 		try
 		{
 			wm.getProjectManager().saveProject( new File( mastodonFile ) );
+			return true;
 		}
 		catch ( final IOException e )
 		{
 			logger.error( "Problem writing project to file " + mastodonFile + ":\n" + e.getMessage() );
+			return false;
 		}
 	}
 
