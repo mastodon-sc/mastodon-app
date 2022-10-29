@@ -32,7 +32,7 @@
 		<mastodon.group>org.mastodon</mastodon.group>
 		<mastodon-collection.version>1.0.0-beta-24</mastodon-collection.version>
 		<mastodon-graph.version>1.0.0-beta-22</mastodon-graph.version>
-		<mastodon.version>1.0.0-beta-25</mastodon.version>
+		<mastodon.version>1.0.0-beta-26-SNAPSHOT</mastodon.version>
 		<mastodon-ellipsoid-fitting.version>0.3.2</mastodon-ellipsoid-fitting.version>
 		<mastodon-tracking.version>1.0.0-beta-12</mastodon-tracking.version>
 		<mastodon-selection-creator.version>0.0.5</mastodon-selection-creator.version>
@@ -114,12 +114,7 @@
 	</repositories>
 
 	<dependencies>
-	
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-core</artifactId>
-		</dependency>
-	
+
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-collection</artifactId>
@@ -160,5 +155,17 @@
 			<artifactId>mastodon-tomancak</artifactId>
 			<version>${mastodon-tomancak.version}</version>
 		</dependency>
+		
+		<!-- Test scope -->
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>fiji</artifactId>
+		</dependency>
+		
 	</dependencies>
 </project>
