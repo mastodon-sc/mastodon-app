@@ -31,7 +31,7 @@
 	
 		<mastodon.group>org.mastodon</mastodon.group>
 		<mastodon-collection.version>1.0.0-beta-24</mastodon-collection.version>
-		<mastodon-graph.version>1.0.0-beta-22</mastodon-graph.version>
+		<mastodon-graph.version>1.0.0-beta-23</mastodon-graph.version>
 		<mastodon.version>1.0.0-beta-26-SNAPSHOT</mastodon.version>
 		<mastodon-ellipsoid-fitting.version>0.3.2</mastodon-ellipsoid-fitting.version>
 		<mastodon-tracking.version>1.0.0-beta-12</mastodon-tracking.version>
