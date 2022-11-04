@@ -51,7 +51,7 @@ def get_artifact_version( artifact_name ):
 			return match.group(1)
 	return ""
 
-def check_if_clean( artifact, skip_up_to_date = False ):
+def check_if_clean( artifact, skip_up_to_date, skip_unstaged ):
 	print( 'Checking repo %s ' % artifact )
 	path = os.path.join( ROOT_PATH, REPO_RELATIVE_PATH, artifact )
 	path = os.path.realpath( path )
@@ -77,7 +77,7 @@ def check_if_clean( artifact, skip_up_to_date = False ):
 		return False
 	# Check if there are unstaged commits.
 	unstaged = re.search( u"Changes not staged for commit:", out, re.MULTILINE )
-	if unstaged:
+	if not skip_unstaged and unstaged:
 		print( '  There are unstaged changes. Aborting. ' )
 		return False
 
@@ -116,8 +116,9 @@ def git_checkout_version( artifact, version, do_install ):
 	if do_install:
 		print('  Building artifact.' )
 		ok, out = run_command( "mvn clean install", path )
-		print('  Could not build artifact: %s' % out)
-		return False
+		if not ok:
+			print('  Could not build artifact: %s' % out)
+			return False
 	return True
 
 def get_branch_name( artifact ):
@@ -148,7 +149,10 @@ def install( default_location = True ):
 	else:
 		print( 'Installing to default SciJava location' )
 		cmd = "mvn clean install"
-	subprocess.call( cmd, cwd = ROOT_PATH, shell = True )
+	ok, out = run_command( cmd, ROOT_PATH )
+	if not ok:
+		print( 'Problem during install: %s' % out )
+		return False
 
 	if not default_location:
 		subcopy_mastodon_jar( target_dir )
@@ -159,15 +163,18 @@ def subcopy_mastodon_jar( target_dir ):
 	if not os.path.exists( copy_dir ):
 		os.mkdir( copy_dir )
 
-	for file in glob.glob( './' + target_dir + '/jars/mastodon-*.jar' ):
-		print( 'Copying %s to %s ' % ( file, copy_dir ) )
+	
+	jars_dir = os.path.join( ROOT_PATH, target_dir, 'jars' )
+	print('Copying mastodon artifactors from %s to %s' % (jars_dir, target_dir) )
+	for file in glob.glob(  os.path.join(jars_dir, 'mastodon-*.jar') ):
+		print( '  Copying %s to %s ' % ( os.path.basename(os.path.normpath(file)), copy_dir ) )
 		shutil.copy( file, copy_dir )
 
 #-----------------------
 # MAIN
 #-----------------------
 
-def run(install_to_default, is_preview, do_install):
+def run(install_to_default, is_preview, do_install, skip_up_to_date, skip_unstaged):
 
 	if not is_preview:
 		# Read the desired version.
@@ -181,7 +188,7 @@ def run(install_to_default, is_preview, do_install):
 		print( '\n----------------' )
 		print( 'Checking repos for cleanliness' )
 		for artifact in ARTIFACTS:
-			if not check_if_clean( artifact ):
+			if not check_if_clean( artifact, skip_up_to_date, skip_unstaged ):
 				return
 
 		# Pull each module.
@@ -226,10 +233,21 @@ if __name__ == "__main__":
 		action='store_true', 
 		default=False,
 		help='If set, will run maven install for each artifact after checking out the version. This is desirable if the versions tagged have not been built yet.')
+	parser.add_argument('--skip-up-to-date', 
+		action='store_true', 
+		default=False,
+		help='If set, will not stop if the local repo is not in sync with the remote.')
+	parser.add_argument('--skip-unstaged', 
+		action='store_true', 
+		default=False,
+		help='If set, will not stop if the local repo has uncommitted changes.')
+	
 	args = parser.parse_args()
 
 	install_to_default = args.install_to_default
 	is_preview = args.preview
 	do_install = args.install
+	skip_up_to_date = args.skip_up_to_date
+	skip_unstaged = args.skip_unstaged
 
-	run(install_to_default, is_preview, do_install)
+	run(install_to_default, is_preview, do_install, skip_up_to_date, skip_unstaged)
