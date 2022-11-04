@@ -11,6 +11,8 @@ import xml.etree.ElementTree as ET
 
 ROOT_PATH = '.'
 PATH_TO_POM_FILE = os.path.join( ROOT_PATH, 'pom.xml' )
+
+# The mastodon core artifacts.
 ARTIFACTS = [
 	'mastodon-collection', 
 	'mastodon-graph', 
@@ -21,6 +23,12 @@ ARTIFACTS = [
 	'mastodon-pasteur',
 	'mastodon-tomancak',
 	'mastodon-app']
+# Things needed by Mastodon not currently in Fiji core.
+EXTRAS = [
+	'mobie-io',
+	'humble-video-all',
+	'humble-video-noarch' ]
+# Path to where the repos are cloned on your computer.
 REPO_RELATIVE_PATH = '..'
 
 def run_command( cmd, where, debug=False ):
@@ -158,10 +166,15 @@ def subcopy_mastodon_jar( target_dir ):
 
 	
 	jars_dir = os.path.join( ROOT_PATH, target_dir, 'jars' )
-	print('Copying mastodon artifactors from %s to %s' % (jars_dir, target_dir) )
+	print('Copying mastodon artifacts from %s to %s' % (jars_dir, target_dir) )
 	for file in glob.glob(  os.path.join(jars_dir, 'mastodon-*.jar') ):
 		print( '  Copying %s to %s ' % ( os.path.basename(os.path.normpath(file)), copy_dir ) )
 		shutil.copy( file, copy_dir )
+	print('Copying extra artifacts from %s to %s' % (jars_dir, target_dir) )
+	for extra in EXTRAS:
+		for file in glob.glob(  os.path.join(jars_dir, '%s-*.jar' % extra) ):
+			print( '  Copying %s to %s ' % ( os.path.basename(os.path.normpath(file)), copy_dir ) )
+			shutil.copy( file, copy_dir )
 
 #-----------------------
 # MAIN
