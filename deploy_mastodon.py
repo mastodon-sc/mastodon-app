@@ -100,7 +100,7 @@ def git_checkout_master( artifact ):
 		return False
 	return True
 
-def git_checkout_version( artifact, version ):
+def git_checkout_version( artifact, version, do_install ):
 	if version.endswith('SNAPSHOT'):
 		print( 'Not checking out SNAPSHOT version %s of module %s' % ( version, artifact ) )	
 		return True # That's ok.
@@ -112,6 +112,11 @@ def git_checkout_version( artifact, version ):
 	ok, out = run_command( "git -c advice.detachedHead=false checkout %s-%s" % ( artifact, version ), path )
 	if not ok:
 		print('  Could not checkout specified version: %s' % out)
+		return False
+	if do_install:
+		print('  Building artifact.' )
+		ok, out = run_command( "mvn clean install", path )
+		print('  Could not build artifact: %s' % out)
 		return False
 	return True
 
@@ -162,7 +167,7 @@ def subcopy_mastodon_jar( target_dir ):
 # MAIN
 #-----------------------
 
-def run(install_to_default, is_preview):
+def run(install_to_default, is_preview, do_install):
 
 	if not is_preview:
 		# Read the desired version.
@@ -185,7 +190,7 @@ def run(install_to_default, is_preview):
 		for artifact in ARTIFACTS:
 			# git_pull( artifact )
 			version = get_artifact_version( artifact )
-			if not git_checkout_version( artifact, version ):
+			if not git_checkout_version( artifact, version, do_install ):
 				return
 		print( 'Done.' )
 
@@ -217,9 +222,14 @@ if __name__ == "__main__":
 		action='store_true', 
 		default=False,
 		help='If set, will run an installation from what is currently on disk. Otherwise we read the desired version from the pom and fetch them from remote.')
+	parser.add_argument('--install', 
+		action='store_true', 
+		default=False,
+		help='If set, will run maven install for each artifact after checking out the version. This is desirable if the versions tagged have not been built yet.')
 	args = parser.parse_args()
 
 	install_to_default = args.install_to_default
 	is_preview = args.preview
+	do_install = args.install
 
-	run(install_to_default, is_preview)
+	run(install_to_default, is_preview, do_install)
