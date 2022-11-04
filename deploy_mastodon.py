@@ -36,7 +36,7 @@ def get_artifact_version( artifact_name ):
 	"""Reads the module version in the pom by looking at the dependencies
 	section."""
 
-	if artifact_name is 'mastodon-app':
+	if artifact_name == 'mastodon-app':
 		# Read from the version tag, because this the repo we are in.
 		ns = "http://maven.apache.org/POM/4.0.0"
 		tree = ET.parse(PATH_TO_POM_FILE)
