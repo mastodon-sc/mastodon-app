@@ -85,6 +85,23 @@ import org.scijava.module.ModuleItem;
 import loci.formats.FormatException;
 import mpicbg.spim.data.SpimDataException;
 
+/**
+ * Main gateway for scripting Mastodon.
+ * <p>
+ * This should be the entry point to create a new project or open an existing
+ * one via the {@link #open(String)} and {@link #newProject(String)} static
+ * methods. Once an instance is obtained this way, a Mastodon project can be
+ * manipulated with the instance methods.
+ * <p>
+ * The gateways used in scripting are called Mamut and TrackMate. We chose these
+ * names to underly that this application offer functionalities that are similar
+ * to that of the MaMuT and TrackMate software, but improved. Nonetheless, all
+ * the code used is from Mastodon and allows only dealing with Mastodon
+ * projects.
+ * 
+ * @author Jean-Yves Tinevez
+ *
+ */
 public class Mamut
 {
 
@@ -116,11 +133,44 @@ public class Mamut
 		this.ID = IDGENERATOR.getAndIncrement();
 	}
 
+	/**
+	 * Opens an existing Mastodon project and returns a {@link Mamut} instance
+	 * that can manipulate it.
+	 * <p>
+	 * A new {@link Context} is created along this call.
+	 * 
+	 * @param mamutProject
+	 *            the path to the Mastodon file.
+	 * @return a new {@link Mamut} instance.
+	 * @throws IOException
+	 *             when an error occurs trying to locate and open the file.
+	 * @throws SpimDataException
+	 *             when an error occurs trying to open the image data.
+	 * @throws FormatException
+	 *             when an error occurs with the image file format.
+	 */
 	public static final Mamut open( final String mamutProject ) throws IOException, SpimDataException, FormatException
 	{
 		return open( mamutProject, new Context() );
 	}
 
+	/**
+	 * Opens an existing Mastodon project and returns a {@link Mamut} instance
+	 * that can manipulate it.
+	 * 
+	 * @param mamutProject
+	 *            the path to the Mastodon file.
+	 * @param context
+	 *            an existing, non-<tt>null</tt> {@link Context} instance to use
+	 *            to open the project.
+	 * @return a new {@link Mamut} instance.
+	 * @throws IOException
+	 *             when an error occurs trying to locate and open the file.
+	 * @throws SpimDataException
+	 *             when an error occurs trying to open the image data.
+	 * @throws FormatException
+	 *             when an error occurs with the image file format.
+	 */
 	public static final Mamut open( final String mamutProject, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
@@ -130,6 +180,23 @@ public class Mamut
 		return new Mamut( wm );
 	}
 
+	/**
+	 * Creates a new Mastodon project analyzing the specified image data.
+	 * 
+	 * @param bdvFile
+	 *            a path to a BDV XML file. It matters not whether the image
+	 *            data is stored locally or remotely.
+	 * @param context
+	 *            an existing, non-<tt>null</tt> {@link Context} instance to use
+	 *            to open the project.
+	 * @return a new {@link Mamut} instance.
+	 * @throws IOException
+	 *             when an error occurs trying to locate and open the file.
+	 * @throws SpimDataException
+	 *             when an error occurs trying to open the image data.
+	 * @throws FormatException
+	 *             when an error occurs with the image file format.
+	 */
 	public static final Mamut newProject( final String bdvFile, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
@@ -139,6 +206,22 @@ public class Mamut
 		return new Mamut( wm );
 	}
 
+	/**
+	 * Creates a new Mastodon project analyzing the specified image data.
+	 * <p>
+	 * A new {@link Context} is created along this call.
+	 * 
+	 * @param bdvFile
+	 *            a path to a BDV XML file. It matters not whether the image
+	 *            data is stored locally or remotely.
+	 * @return a new {@link Mamut} instance.
+	 * @throws IOException
+	 *             when an error occurs trying to locate and open the file.
+	 * @throws SpimDataException
+	 *             when an error occurs trying to open the image data.
+	 * @throws FormatException
+	 *             when an error occurs with the image file format.
+	 */
 	public static final Mamut newProject( final String bdvFile ) throws IOException, SpimDataException, FormatException
 	{
 		return newProject( bdvFile, new Context() );
@@ -148,6 +231,12 @@ public class Mamut
 	 * Setters.
 	 */
 
+	/**
+	 * Sets the logger instance to use to send messages and errors.
+	 * 
+	 * @param logger
+	 *            a logger instance.
+	 */
 	public void setLogger( final Logger logger )
 	{
 		this.logger = logger;
@@ -157,21 +246,42 @@ public class Mamut
 	 * Getters.
 	 */
 
+	/**
+	 * Returns the data model manipulated by this {@link Mamut} instance.
+	 * 
+	 * @return the data model.
+	 */
 	public Model getModel()
 	{
 		return wm.getAppModel().getModel();
 	}
 
+	/**
+	 * Returns the selection model manipulated by this {@link Mamut} instance.
+	 * 
+	 * @return the selection model.
+	 */
 	public SelectionModel< Spot, Link > getSelectionModel()
 	{
 		return wm.getAppModel().getSelectionModel();
 	}
 
+	/**
+	 * Returns the {@link WindowManager} gateway used to create views of the
+	 * data used in this {@link Mamut} instance.
+	 * 
+	 * @return the {@link WindowManager} gateway.
+	 */
 	public WindowManager getWindowManager()
 	{
 		return wm;
 	}
 
+	/**
+	 * Returns the logger instance to use to send messages and errors.
+	 * 
+	 * @return the logger instance.
+	 */
 	public Logger getLogger()
 	{
 		return logger;
@@ -181,6 +291,15 @@ public class Mamut
 	 * Output.
 	 */
 
+	/**
+	 * Saves the Mastodon project of this instance to a Mastodon file.
+	 * <p>
+	 * This method will return an error if a Mastodon file for the project has
+	 * not been specified a first time with the {@link #saveAs(String)} method.
+	 * 
+	 * @return <code>true</code> if saving happened without errors. Otherwise an
+	 *         error message is sent to the {@link Logger} instance.
+	 */
 	public boolean save()
 	{
 		final File projectFile = wm.getProjectManager().getProject().getProjectRoot();
@@ -192,6 +311,18 @@ public class Mamut
 		return saveAs( projectFile.getAbsolutePath() );
 	}
 
+	/**
+	 * Saves the Mastodon project of this instance to a new Mastodon file (it is
+	 * recommended to use the <tt>.mastodon</tt> file extension).
+	 * <p>
+	 * The file specified will be reused for every following call to the
+	 * {@link #save()} method.
+	 * 
+	 * @param mastodonFile
+	 *            a path to a writable file.
+	 * @return <code>true</code> if saving happened without errors. Otherwise an
+	 *         error message is sent to the {@link Logger} instance.
+	 */
 	public boolean saveAs( final String mastodonFile )
 	{
 		logger.info( "Saving to " + mastodonFile + '\n' );
@@ -211,6 +342,20 @@ public class Mamut
 	 * Selection methods.
 	 */
 
+	/**
+	 * Sets the current selection from a selection creator expression.
+	 * <p>
+	 * Such an expression can be:
+	 * 
+	 * <pre>
+	 * mamut.select( "vertexFeature( 'Track N spots' ) < 10" )
+	 * </pre>
+	 * An error message is sent to the logger is there is a problem with the
+	 * evaluation of the expression.
+	 * 
+	 * @param expression
+	 *            a selection creator expression.
+	 */
 	public void select( final String expression )
 	{
 		final Model model = getModel();
@@ -235,11 +380,17 @@ public class Mamut
 		}
 	}
 
+	/**
+	 * Clears the current selection.
+	 */
 	public void resetSelection()
 	{
 		getSelectionModel().clearSelection();
 	}
 
+	/**
+	 * Deletes all the data items (spots and tracks) currently in the selection.
+	 */
 	public void deleteSelection()
 	{
 		final SelectionModel< Spot, Link > selection = getSelectionModel();
@@ -288,16 +439,30 @@ public class Mamut
 	 * Info methods.
 	 */
 
+	/**
+	 * Prints the content of the data model as two tables as text in the logger
+	 * output.
+	 */
 	public void echo()
 	{
 		logger.info( ModelUtils.dump( getModel() ) );
 	}
 
+	/**
+	 * Prints the first N data items of the content of the data model as two
+	 * tables as text in the logger output.
+	 * 
+	 * @param nLines
+	 *            the number of data items to print.
+	 */
 	public void echo( final int nLines )
 	{
 		logger.info( ModelUtils.dump( getModel(), nLines ) );
 	}
 
+	/**
+	 * Prints a summary information to the logger output.
+	 */
 	public void info()
 	{
 		final StringBuilder str = new StringBuilder();
@@ -318,6 +483,10 @@ public class Mamut
 		logger.info( str.toString() );
 	}
 
+	/**
+	 * Prints summary information on the feature computers known to Mastodon to
+	 * the logger output.
+	 */
 	public void infoFeatures()
 	{
 		final List< CommandInfo > commandInfos = wm.getContext().getService( CommandService.class ).getCommandsOfType( MamutFeatureComputer.class );
@@ -370,6 +539,10 @@ public class Mamut
 		logger.info( str.toString() + '\n' );
 	}
 
+	/**
+	 * Prints summary information on the tag-sets and tags currently present in
+	 * the current Mastodon project.
+	 */
 	public void infoTags()
 	{
 		final TagSetModel< Spot, Link > tagModel = getModel().getTagSetModel();
@@ -411,16 +584,25 @@ public class Mamut
 	 * Undo =, redo and co.
 	 */
 
+	/**
+	 * Undo the last changes. Can be called several times.
+	 */
 	public void undo()
 	{
 		getModel().undo();
 	}
 
+	/**
+	 * Redo the last changes. Can be called several times.
+	 */
 	public void redo()
 	{
 		getModel().redo();
 	}
 
+	/**
+	 * Clears the content of the data model. Can be undone.
+	 */
 	public void clear()
 	{
 		logger.info( "Clearing model.\n" );
@@ -435,6 +617,17 @@ public class Mamut
 	 * TrackMate methods.
 	 */
 
+	/**
+	 * Creates and returns a new {@link TrackMateProxy} instance. This instance
+	 * can then be used to configure tracking on the image analyzed in this
+	 * current {@link Mamut} instance.
+	 * <p>
+	 * It is perfectly possible to create and configure separately several
+	 * {@link TrackMateProxy} instances. Tracking results will be combined
+	 * depending on the instances configuration.
+	 * 
+	 * @return a new {@link TrackMateProxy} instance.
+	 */
 	public TrackMateProxy createTrackMate()
 	{
 		final SharedBigDataViewerData imageData = wm.getAppModel().getSharedBdvData();
@@ -459,6 +652,17 @@ public class Mamut
 		return new TrackMateProxy( trackmate, logger );
 	}
 
+	/**
+	 * Performs detection of spots in the image data with the default detection
+	 * algorithm (the DoG detector).
+	 * 
+	 * @param radius
+	 *            the radius of spots to detect, in the physical units of the
+	 *            image data.
+	 * @param threshold
+	 *            the threshold on quality of detection below which to reject
+	 *            detected spots.
+	 */
 	public void detect( final double radius, final double threshold )
 	{
 		final TrackMate trackmate = createTrackMate().trackmate;
@@ -467,6 +671,17 @@ public class Mamut
 		trackmate.execDetection();
 	}
 
+	/**
+	 * Performs linking of existing spots using the default linking algorithm
+	 * (the Simple LAP linker).
+	 * 
+	 * @param maxLinkingDistance
+	 *            the max linking distance (in physical unit) beyond which to
+	 *            forbid linking.
+	 * @param maxFrameGap
+	 *            the max difference in frames for bridging gaps (missed
+	 *            detections).
+	 */
 	public void link( final double maxLinkingDistance, final int maxFrameGap )
 	{
 		final TrackMate trackmate = createTrackMate().trackmate;
@@ -480,11 +695,30 @@ public class Mamut
 	 * Feature methods.
 	 */
 
+	/**
+	 * Computes the specified features.
+	 * 
+	 * @param featureKeys
+	 *            the names of the feature computer to use for computation. It
+	 *            matters not whether the feature is for spots, links, ...
+	 */
 	public void computeFeatures( final String... featureKeys )
 	{
 		computeFeatures( false, featureKeys );
 	}
 
+	/**
+	 * Computes the specified features, possible forcing recomputation for all
+	 * data items, regardless of whether they are in sync or not.
+	 * 
+	 * @param forceComputeAll
+	 *            if <code>true</code>, will force recomputation for all data
+	 *            items. If <code>false</code>, feature values that are in sync
+	 *            won't be recomputed.
+	 * @param featureKeys
+	 *            the names of the feature computer to use for computation. It
+	 *            matters not whether the feature is for spots, links, ...
+	 */
 	public void computeFeatures( final boolean forceComputeAll, final String... featureKeys )
 	{
 		logger.info( "Feature computation started.\n" );
@@ -534,6 +768,14 @@ public class Mamut
 	 * Tags methods.
 	 */
 
+	/**
+	 * Creates a new tag-set and several tags for this tag-set.
+	 * 
+	 * @param tagSetName
+	 *            the tag-set name.
+	 * @param labels
+	 *            the list of labels to create in this tag-set.
+	 */
 	public void createTag( final String tagSetName, final String... labels )
 	{
 		final TagSetStructure tss = new TagSetStructure();
@@ -548,6 +790,21 @@ public class Mamut
 		getModel().setUndoPoint();
 	}
 
+	/**
+	 * Sets the color associated with a tag in a tag-set. The color is specified
+	 * as a RGB triplet from 0 to 255.
+	 * 
+	 * @param tagSetName
+	 *            the name of the tag-set containing the target tag.
+	 * @param label
+	 *            the tag to modify the color of.
+	 * @param R
+	 *            the red value of the RGB triplet.
+	 * @param G
+	 *            the green value of the RGB triplet.
+	 * @param B
+	 *            the blue value of the RGB triplet.
+	 */
 	public void setTagColor( final String tagSetName, final String label, final int R, final int G, final int B )
 	{
 		final TagSetStructure tss = new TagSetStructure();
@@ -575,6 +832,14 @@ public class Mamut
 		getModel().setUndoPoint();
 	}
 
+	/**
+	 * Assigns the specified tag to the data items currently in the selection.
+	 * 
+	 * @param tagSetName
+	 *            the name of the tag-set to use.
+	 * @param label
+	 *            the name of the tag in the tag-set to use.
+	 */
 	public void tagSelectionWith( final String tagSetName, final String label )
 	{
 		final TagSetModel< Spot, Link > tagModel = getModel().getTagSetModel();
