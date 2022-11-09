@@ -44,6 +44,13 @@ import org.mastodon.tracking.mamut.trackmate.PluginProvider;
 import org.mastodon.tracking.mamut.trackmate.TrackMate;
 import org.scijava.log.Logger;
 
+/**
+ * The tracking gateway used in scripting to configure and execute tracking in
+ * Mastodon scripts.
+ * 
+ * @author Jean-Yves Tinevez
+ *
+ */
 public class TrackMateProxy
 {
 	final TrackMate trackmate;
@@ -56,6 +63,14 @@ public class TrackMateProxy
 		this.logger = logger;
 	}
 
+	/**
+	 * Configures this tracking session to use the specified detector. Prints an
+	 * error message if the name is unknown.
+	 * 
+	 * @param detector
+	 *            the name of the detector, as returned in
+	 *            {@link #infoDetectors()}.
+	 */
 	public void useDetector( final String detector )
 	{
 		final PluginProvider< SpotDetectorOp > detectorprovider = new PluginProvider<>( SpotDetectorOp.class );
@@ -83,6 +98,9 @@ public class TrackMateProxy
 		trackmate.getSettings().detectorSettings( newSettings );
 	}
 
+	/**
+	 * Resets the detection settings to their default values.
+	 */
 	public void resetDetectorSettings()
 	{
 		final Map< String, Object > dSettings = getDefaultDetectorSettings( trackmate.getSettings().values.getDetector().getName() );
@@ -101,6 +119,13 @@ public class TrackMateProxy
 		}
 	}
 
+	/**
+	 * Configures this tracking session to use the specified linker. Prints an
+	 * error message if the name is unknown.
+	 * 
+	 * @param linker
+	 *            the name of the linker, as returned in {@link #infoLinkers()}.
+	 */
 	public void useLinker( final String linker )
 	{
 		final PluginProvider< SpotLinkerOp > linkerprovider = new PluginProvider<>( SpotLinkerOp.class );
@@ -128,6 +153,9 @@ public class TrackMateProxy
 		trackmate.getSettings().linkerSettings( newSettings );
 	}
 
+	/**
+	 * Resets the linking settings to their default values.
+	 */
 	public void resetLinkerSettings()
 	{
 		final Map< String, Object > lSettings = getDefaultLinkerSettings( trackmate.getSettings().values.getLinker().getName() );
@@ -147,6 +175,16 @@ public class TrackMateProxy
 		}
 	}
 
+	/**
+	 * Configures one parameter of the current detector. The parameter key and
+	 * value must be valid for the detector set with
+	 * {@link #useDetector(String)}, as shown in {@link #infoDetectors()}.
+	 * 
+	 * @param key
+	 *            the key of the parameter.
+	 * @param value
+	 *            the value to set for this parameter.
+	 */
 	public void setDetectorSetting( final String key, final Object value )
 	{
 		if ( !trackmate.getSettings().values.getDetectorSettings().containsKey( key ) )
@@ -164,6 +202,16 @@ public class TrackMateProxy
 		trackmate.getSettings().values.getDetectorSettings().put( key, value );
 	}
 
+	/**
+	 * Configures one parameter of the current link. The parameter key and value
+	 * must be valid for the linkset with {@link #useLinker(String)}, as shown
+	 * in {@link #infoLinkers())}.
+	 * 
+	 * @param key
+	 *            the key of the parameter.
+	 * @param value
+	 *            the value to set for this parameter.
+	 */
 	public void setLinkerSetting( final String key, final Object value )
 	{
 		if ( !trackmate.getSettings().values.getLinkerSettings().containsKey( key ) )
@@ -181,6 +229,12 @@ public class TrackMateProxy
 		trackmate.getSettings().values.getLinkerSettings().put( key, value );
 	}
 
+	/**
+	 * Executes the tracking with current configuration.
+	 * 
+	 * @return <code>true</code> if tracking completed successful. An error
+	 *         message will be printed otherwise.
+	 */
 	public boolean run()
 	{
 		trackmate.run();
@@ -194,11 +248,18 @@ public class TrackMateProxy
 		return trackmate.isSuccessful();
 	}
 
+	/**
+	 * Prints the current tracking configuration.
+	 */
 	public void info()
 	{
 		logger.info( "TrackMate settings:\n" + trackmate.getSettings().toString() + '\n' );
 	}
 
+	/**
+	 * Prints information on the collection of detectors currently usable in
+	 * Mastodon.
+	 */
 	public void infoDetectors()
 	{
 		final StringBuilder str = new StringBuilder();
@@ -236,6 +297,10 @@ public class TrackMateProxy
 		logger.info( str );
 	}
 
+	/**
+	 * Prints information on the collection of linkers currently usable in
+	 * Mastodon.
+	 */
 	public void infoLinkers()
 	{
 		final StringBuilder str = new StringBuilder();
