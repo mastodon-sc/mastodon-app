@@ -349,8 +349,9 @@ public class Mamut
 	 * Such an expression can be:
 	 * 
 	 * <pre>
-	 * mamut.select( "vertexFeature( 'Track N spots' ) < 10" )
+	 * mamut.select( "vertexFeature( 'Track N spots' ) &lt; 10" )
 	 * </pre>
+	 * 
 	 * An error message is sent to the logger is there is a problem with the
 	 * evaluation of the expression.
 	 * 

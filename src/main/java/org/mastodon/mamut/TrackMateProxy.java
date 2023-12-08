@@ -204,8 +204,8 @@ public class TrackMateProxy
 
 	/**
 	 * Configures one parameter of the current link. The parameter key and value
-	 * must be valid for the linkset with {@link #useLinker(String)}, as shown
-	 * in {@link #infoLinkers())}.
+	 * must be valid for the link set with {@link #useLinker(String)}, as shown
+	 * in {@link #infoLinkers()}.
 	 * 
 	 * @param key
 	 *            the key of the parameter.
