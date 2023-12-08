@@ -50,13 +50,16 @@ import org.mastodon.graph.GraphIdBimap;
 import org.mastodon.graph.algorithm.RootFinder;
 import org.mastodon.mamut.feature.MamutFeatureComputer;
 import org.mastodon.mamut.feature.MamutFeatureComputerService;
+import org.mastodon.mamut.io.ProjectCreator;
+import org.mastodon.mamut.io.ProjectLoader;
+import org.mastodon.mamut.io.ProjectSaver;
+import org.mastodon.mamut.io.project.MamutProject;
+import org.mastodon.mamut.io.project.MamutProjectIO;
 import org.mastodon.mamut.model.Link;
 import org.mastodon.mamut.model.Model;
 import org.mastodon.mamut.model.ModelGraph;
 import org.mastodon.mamut.model.ModelUtils;
 import org.mastodon.mamut.model.Spot;
-import org.mastodon.mamut.project.MamutProject;
-import org.mastodon.mamut.project.MamutProjectIO;
 import org.mastodon.mamut.selectioncreator.SelectionParser;
 import org.mastodon.model.SelectionModel;
 import org.mastodon.model.tag.ObjTagMap;
@@ -105,7 +108,7 @@ import mpicbg.spim.data.SpimDataException;
 public class Mamut
 {
 
-	private final WindowManager wm;
+	private final ProjectModel projectModel;
 
 	private final MamutFeatureComputerService featureComputerService;
 
@@ -124,12 +127,13 @@ public class Mamut
 
 	private final int ID;
 
-	private Mamut( final WindowManager wm )
+
+	private Mamut( final ProjectModel projectModel )
 	{
-		this.wm = wm;
-		this.featureComputerService = wm.getContext().getService( MamutFeatureComputerService.class );
-		featureComputerService.setModel( wm.getAppModel().getModel() );
-		featureComputerService.setSharedBdvData( wm.getAppModel().getSharedBdvData() );
+		this.projectModel = projectModel;
+		this.featureComputerService = MamutFeatureComputerService.newInstance( projectModel.getContext() );
+		featureComputerService.setModel( projectModel.getModel() );
+		featureComputerService.setSharedBdvData( projectModel.getSharedBdvData() );
 		this.ID = IDGENERATOR.getAndIncrement();
 	}
 
@@ -174,10 +178,9 @@ public class Mamut
 	public static final Mamut open( final String mamutProject, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
-		final MamutProject project = new MamutProjectIO().load( mamutProject );
-		final WindowManager wm = new WindowManager( context );
-		wm.getProjectManager().open( project );
-		return new Mamut( wm );
+		final MamutProject project = MamutProjectIO.load( mamutProject );
+		final ProjectModel projectModel = ProjectLoader.open( project, context );
+		return new Mamut( projectModel );
 	}
 
 	/**
@@ -200,10 +203,8 @@ public class Mamut
 	public static final Mamut newProject( final String bdvFile, final Context context ) throws IOException, SpimDataException, FormatException
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
-		final WindowManager wm = new WindowManager( context );
-		final MamutProject project = new MamutProject( null, new File( bdvFile ) );
-		wm.getProjectManager().open( project );
-		return new Mamut( wm );
+		final ProjectModel projectModel = ProjectCreator.createProjectFromBdvFile( new File( bdvFile ), context );
+		return new Mamut( projectModel );
 	}
 
 	/**
@@ -253,7 +254,7 @@ public class Mamut
 	 */
 	public Model getModel()
 	{
-		return wm.getAppModel().getModel();
+		return projectModel.getModel();
 	}
 
 	/**
@@ -263,7 +264,7 @@ public class Mamut
 	 */
 	public SelectionModel< Spot, Link > getSelectionModel()
 	{
-		return wm.getAppModel().getSelectionModel();
+		return projectModel.getSelectionModel();
 	}
 
 	/**
@@ -274,7 +275,7 @@ public class Mamut
 	 */
 	public WindowManager getWindowManager()
 	{
-		return wm;
+		return projectModel.getWindowManager();
 	}
 
 	/**
@@ -302,7 +303,7 @@ public class Mamut
 	 */
 	public boolean save()
 	{
-		final File projectFile = wm.getProjectManager().getProject().getProjectRoot();
+		final File projectFile = projectModel.getProject().getProjectRoot();
 		if ( projectFile == null )
 		{
 			logger.warn( "Mastodon file not set. Please use #saveAs() first.\n" );
@@ -328,7 +329,7 @@ public class Mamut
 		logger.info( "Saving to " + mastodonFile + '\n' );
 		try
 		{
-			wm.getProjectManager().saveProject( new File( mastodonFile ) );
+			ProjectSaver.saveProject( new File( mastodonFile ), projectModel );
 			return true;
 		}
 		catch ( final IOException e )
@@ -468,12 +469,12 @@ public class Mamut
 		final StringBuilder str = new StringBuilder();
 		str.append( "Data model #" + this.ID + '\n' );
 		str.append( " - mastodon project file: " );
-		final File mastodonFile = wm.getProjectManager().getProject().getProjectRoot();
+		final File mastodonFile = projectModel.getProject().getProjectRoot();
 		if ( mastodonFile == null )
 			str.append( "Not defined.\n" );
 		else
 			str.append( mastodonFile.getAbsolutePath() + '\n' );
-		str.append( " - dataset: " + wm.getProjectManager().getProject().getDatasetXmlFile() + '\n' );
+		str.append( " - dataset: " + projectModel.getProject().getDatasetXmlFile() + '\n' );
 		str.append( String.format( " - objects: %d spots, %d links and %d tracks.\n",
 				getModel().getGraph().vertices().size(),
 				getModel().getGraph().edges().size(),
@@ -489,8 +490,8 @@ public class Mamut
 	 */
 	public void infoFeatures()
 	{
-		final List< CommandInfo > commandInfos = wm.getContext().getService( CommandService.class ).getCommandsOfType( MamutFeatureComputer.class );
-		final FeatureSpecsService featureSpecs = wm.getContext().getService( FeatureSpecsService.class );
+		final List< CommandInfo > commandInfos = projectModel.getContext().getService( CommandService.class ).getCommandsOfType( MamutFeatureComputer.class );
+		final FeatureSpecsService featureSpecs = projectModel.getContext().getService( FeatureSpecsService.class );
 
 		final List< String > keys = new ArrayList<>();
 		final List< String > infos = new ArrayList<>();
@@ -532,8 +533,11 @@ public class Mamut
 		final StringBuilder str = new StringBuilder();
 		str.append( "Features that can be computed:" );
 
-		@SuppressWarnings( "null" )
-		final int width = keys.stream().map( String::length ).reduce( Math::max ).orElse( 5 ).intValue();
+		final int width = keys.stream()
+				.map( String::length )
+				.reduce( Math::max )
+				.orElse( 5 )
+				.intValue();
 		for ( int i = 0; i < keys.size(); i++ )
 			str.append( String.format( "\n - %-" + width + "s - %s", keys.get( i ), infos.get( i ) ) );
 
@@ -631,7 +635,7 @@ public class Mamut
 	 */
 	public TrackMateProxy createTrackMate()
 	{
-		final SharedBigDataViewerData imageData = wm.getAppModel().getSharedBdvData();
+		final SharedBigDataViewerData imageData = projectModel.getSharedBdvData();
 		final int numTimepoints = imageData.getNumTimepoints();
 
 		final Map< String, Object > detectorSettings = DetectionUtil.getDefaultDetectorSettingsMap();
@@ -648,7 +652,7 @@ public class Mamut
 				.linkerSettings( linkerSettings );
 
 		final TrackMate trackmate = new TrackMate( settings, getModel(), getSelectionModel() );
-		trackmate.setContext( wm.getContext() );
+		trackmate.setContext( projectModel.getContext() );
 		trackmate.setLogger( logger );
 		return new TrackMateProxy( trackmate, logger );
 	}
@@ -726,7 +730,9 @@ public class Mamut
 		final Collection< FeatureSpec< ?, ? > > featureSpecs = new ArrayList<>();
 		for ( final String key : featureKeys )
 		{
-			final FeatureSpec< ?, ? > spec = wm.getFeatureSpecsService().getSpec( key );
+			final Context context = projectModel.getContext();
+			final FeatureSpecsService featureSpecsService = context.getService( FeatureSpecsService.class );
+			final FeatureSpec< ?, ? > spec = featureSpecsService.getSpec( key );
 			if ( null == spec )
 			{
 				logger.warn( "Could not find a feature corresponding to the key " + key + ". Skipping.\n" );
