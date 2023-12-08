@@ -1,7 +1,11 @@
 #@ Context context
 
 from org.mastodon.mamut import Mamut
-import os
+from org.mastodon.mamut.views.trackscheme import MamutViewTrackScheme
+from org.mastodon.mamut.views.bdv import MamutViewBdv
+from org.mastodon.mamut.views.table import MamutViewSelectionTable
+
+import os
 
 # If you want to open an existing Mastodon file, here is the command.
 # newMastodonFile = "/Users/tinevez/Development/Mastodon/mastodon/samples/test_scripting.mastodon";
@@ -9,7 +13,8 @@ from org.mastodon.mamut import Mamut
 
 # But in the following we will start from an image.
 cwd = os.getcwd()
-bdvFile = os.path.join( cwd, 'samples/datasethdf5.xml' )
+bdvFile = os.path.join( cwd, 'samples/datasethdf5.xml'
+ )
 if not os.path.exists( bdvFile ):
 	print( 'The file %s cannot be found. Please enter the path of a valid BDV file.' % bdvFile )
 else:
@@ -184,9 +189,11 @@ else:
 	mamut.save()
 	
 	# Save to a specified file.
-	newMastodonFile = os.path.join( cwd, 'samples/test_scripting.mastodon' )
+	newMastodonFile = os.path.join( cwd, 'samples/test_scripting.mastodon'
+ )
 	mamut.saveAs( newMastodonFile )
-	# From now on, save() will save to this file.
+	
+# From now on, save() will save to this file.
 	
 	#------------------------------------------------------------------
 	# Reloading on another instance.
@@ -204,7 +211,9 @@ else:
 	logger.info( "\n  Display all values for the first 10 objects" )
 	logger.info( "\n---------------------------------------------------\n" )
 	
-	mamut.computeFeatures( "Spot radius", "Spot gaussian-filtered intensity", "Spot N links", "Track N spots", "Spot radius" )
+	# Some of the features listed below are computed on the fly and need not 
+	# to be recomputed. A warning will be displayed about them.
+	mamut.computeFeatures( "Spot radius", "Spot center intensity", "Spot N links", "Track N spots" )
 	mamut.echo( 10 )
 	
 	
@@ -215,14 +224,17 @@ else:
 	# Create a TrackScheme with the coloring from the tag.
 	displaySettings = {}
 	displaySettings[ "TagSet" ] = "Fruits"
-	mamut.getWindowManager().createTrackScheme( displaySettings );
+	# Note that we need to specify what view we want to create via the
+	# view class 'MamutViewTrackScheme' directly. See the first lines of
+	# the script for the imports.
+	mamut.getWindowManager().createView( MamutViewTrackScheme, displaySettings );
 	
 	# A BDV.
-	mamut.getWindowManager().createBigDataViewer()
+	mamut.getWindowManager().createView( MamutViewBdv )
 	
 	# A selection table with all the long tracks.
 	mamut.select( "vertexFeature('Track N spots' ) > 20" )
-	mamut.getWindowManager().createTable( True )
+	mamut.getWindowManager().createView( MamutViewSelectionTable )
 
 	# Cool no?
 	
