@@ -30,14 +30,14 @@
 	<properties>
 	
 		<mastodon.group>org.mastodon</mastodon.group>
-		<mastodon-collection.version>1.0.0-beta-25</mastodon-collection.version>
-		<mastodon-graph.version>1.0.0-beta-25</mastodon-graph.version>
-		<mastodon.version>1.0.0-beta-27</mastodon.version>
-		<mastodon-ellipsoid-fitting.version>0.4.0</mastodon-ellipsoid-fitting.version>
-		<mastodon-tracking.version>1.0.0-beta-14</mastodon-tracking.version>
-		<mastodon-selection-creator.version>0.0.7</mastodon-selection-creator.version>
-		<mastodon-pasteur.version>1.0.0-beta-7</mastodon-pasteur.version>
-		<mastodon-tomancak.version>0.4.0</mastodon-tomancak.version>
+		<mastodon-collection.version>1.0.0-beta-26</mastodon-collection.version>
+		<mastodon-graph.version>1.0.0-beta-26</mastodon-graph.version>
+		<mastodon.version>1.0.0-beta-30</mastodon.version>
+		<mastodon-ellipsoid-fitting.version>0.5.0</mastodon-ellipsoid-fitting.version>
+		<mastodon-tracking.version>1.0.0-beta-15</mastodon-tracking.version>
+		<mastodon-selection-creator.version>0.0.8</mastodon-selection-creator.version>
+		<mastodon-pasteur.version>1.0.0-beta-9</mastodon-pasteur.version>
+		<mastodon-tomancak.version>0.5.0</mastodon-tomancak.version>
 		
 		<package-name>org.mastodon</package-name>
 
