@@ -1,10 +1,6 @@
 #@ Context context
 
 from org.mastodon.mamut import Mamut
-from org.mastodon.mamut.views.trackscheme import MamutViewTrackScheme
-from org.mastodon.mamut.views.bdv import MamutViewBdv
-from org.mastodon.mamut.views.table import MamutViewSelectionTable
-
 import os
 
 # If you want to open an existing Mastodon file, here is the command.
@@ -13,8 +9,7 @@ import os
 
 # But in the following we will start from an image.
 cwd = os.getcwd()
-bdvFile = os.path.join( cwd, 'samples/datasethdf5.xml'
- )
+bdvFile = os.path.join( cwd, 'samples/datasethdf5.xml' )
 if not os.path.exists( bdvFile ):
 	print( 'The file %s cannot be found. Please enter the path of a valid BDV file.' % bdvFile )
 else:
@@ -224,17 +219,14 @@ else:
 	# Create a TrackScheme with the coloring from the tag.
 	displaySettings = {}
 	displaySettings[ "TagSet" ] = "Fruits"
-	# Note that we need to specify what view we want to create via the
-	# view class 'MamutViewTrackScheme' directly. See the first lines of
-	# the script for the imports.
-	mamut.getWindowManager().createView( MamutViewTrackScheme, displaySettings );
+	mamut.getWindowManager().createTrackScheme( displaySettings );
 	
 	# A BDV.
-	mamut.getWindowManager().createView( MamutViewBdv )
+	mamut.getWindowManager().createBigDataViewer()
 	
 	# A selection table with all the long tracks.
 	mamut.select( "vertexFeature('Track N spots' ) > 20" )
-	mamut.getWindowManager().createView( MamutViewSelectionTable )
+	mamut.getWindowManager().createSelectionTable( )
 
 	# Cool no?
 	
