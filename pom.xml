@@ -150,11 +150,13 @@
 			<artifactId>mastodon-pasteur</artifactId>
 			<version>${mastodon-pasteur.version}</version>
 		</dependency>
+		<!-- Disable mastodon-tomancak for now
 		<dependency>
 			<groupId>${mastodon.group}</groupId>
 			<artifactId>mastodon-tomancak</artifactId>
 			<version>${mastodon-tomancak.version}</version>
 		</dependency>
+		 -->
 		
 		<!-- Test scope -->
 		<dependency>
