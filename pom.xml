@@ -37,7 +37,6 @@
 		<mastodon-tracking.version>1.0.0-beta-16-SNAPSHOT</mastodon-tracking.version>
 		<mastodon-selection-creator.version>0.0.9-SNAPSHOT</mastodon-selection-creator.version>
 		<mastodon-pasteur.version>1.0.0-beta-10-SNAPSHOT</mastodon-pasteur.version>
-		<mastodon-tomancak.version>0.6.1-SNAPSHOT</mastodon-tomancak.version>
 		
 		<package-name>org.mastodon</package-name>
 
@@ -150,13 +149,6 @@
 			<artifactId>mastodon-pasteur</artifactId>
 			<version>${mastodon-pasteur.version}</version>
 		</dependency>
-		<!-- Disable mastodon-tomancak for now
-		<dependency>
-			<groupId>${mastodon.group}</groupId>
-			<artifactId>mastodon-tomancak</artifactId>
-			<version>${mastodon-tomancak.version}</version>
-		</dependency>
-		 -->
 		
 		<!-- Test scope -->
 		<dependency>
