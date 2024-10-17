@@ -534,6 +534,7 @@ public class Mamut
 		final StringBuilder str = new StringBuilder();
 		str.append( "Features that can be computed:" );
 
+		@SuppressWarnings( "null" )
 		final int width = keys.stream()
 				.map( String::length )
 				.reduce( Math::max )
