@@ -35,14 +35,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.WordUtils;
-import org.mastodon.tracking.detection.DetectionUtil;
-import org.mastodon.tracking.linking.LinkingUtils;
+import org.mastodon.mamut.model.Model;
+import org.mastodon.mamut.model.ModelGraph;
+import org.mastodon.tracking.mamut.detection.DetectionQualityFeature;
 import org.mastodon.tracking.mamut.detection.SpotDetectorOp;
-import org.mastodon.tracking.mamut.linking.KalmanLinkerMamut;
+import org.mastodon.tracking.mamut.linking.LinkCostFeature;
 import org.mastodon.tracking.mamut.linking.SpotLinkerOp;
 import org.mastodon.tracking.mamut.trackmate.PluginProvider;
 import org.mastodon.tracking.mamut.trackmate.TrackMate;
 import org.scijava.log.Logger;
+
+import bdv.viewer.SourceAndConverter;
+import net.imagej.ops.OpService;
+import net.imagej.ops.special.hybrid.Hybrids;
+import net.imagej.ops.special.hybrid.UnaryHybridCF;
+import net.imagej.ops.special.inplace.Inplaces;
 
 /**
  * The tracking gateway used in scripting to configure and execute tracking in
@@ -87,7 +94,7 @@ public class TrackMateProxy
 		trackmate.getSettings().detector( detectorClass );
 
 		final Map< String, Object > oldSettings = new HashMap<>( trackmate.getSettings().values.getDetectorSettings() );
-		final Map< String, Object > newSettings = getDefaultDetectorSettings( detectorClass.getName() );
+		final Map< String, Object > newSettings = getDefaultDetectorSettings( detectorClass );
 		// Copy as much as we can from old to new.
 		for ( final String key : newSettings.keySet() )
 		{
@@ -103,20 +110,25 @@ public class TrackMateProxy
 	 */
 	public void resetDetectorSettings()
 	{
-		final Map< String, Object > dSettings = getDefaultDetectorSettings( trackmate.getSettings().values.getDetector().getName() );
+		final Map< String, Object > dSettings = getDefaultDetectorSettings( trackmate.getSettings().values.getDetector() );
 		trackmate.getSettings().detectorSettings( dSettings );
 	}
 
-	private Map< String, Object > getDefaultDetectorSettings( final String className )
+	private Map< String, Object > getDefaultDetectorSettings( final Class< ? extends SpotDetectorOp > detectorClass )
 	{
-		switch ( className )
-		{
-		default:
-		case "org.mastodon.tracking.mamut.detection.DoGDetectorMamut":
-		case "org.mastodon.tracking.mamut.detection.AdvancedDoGDetectorMamut":
-		case "org.mastodon.tracking.mamut.detection.LoGDetectorOp":
-			return DetectionUtil.getDefaultDetectorSettingsMap();
-		}
+		// Instantiate a dummy detector.
+		final Model model = trackmate.getModel();
+		final ModelGraph graph = model.getGraph();
+		final DetectionQualityFeature qualityFeature = DetectionQualityFeature.getOrRegister(
+				model.getFeatureModel(), graph.vertices().getRefPool() );
+		final OpService ops = trackmate.getContext().getService( OpService.class );
+		final UnaryHybridCF< List< SourceAndConverter< ? > >, ModelGraph > unaryCF = Hybrids.unaryCF( ops, detectorClass,
+				graph, trackmate.getSettings().values.getSources(),
+				new HashMap< String, Object >(),
+				model.getSpatioTemporalIndex(),
+				qualityFeature );
+		final SpotDetectorOp detector = ( SpotDetectorOp ) unaryCF;
+		return detector.getDefaultSettings();
 	}
 
 	/**
@@ -142,7 +154,7 @@ public class TrackMateProxy
 		trackmate.getSettings().linker( linkerClass );
 
 		final Map< String, Object > oldSettings = new HashMap<>( trackmate.getSettings().values.getLinkerSettings() );
-		final Map< String, Object > newSettings = getDefaultLinkerSettings( linkerClass.getName() );
+		final Map< String, Object > newSettings = getDefaultLinkerSettings( linkerClass );
 		// Copy as much as we can from old to new.
 		for ( final String key : newSettings.keySet() )
 		{
@@ -158,21 +170,25 @@ public class TrackMateProxy
 	 */
 	public void resetLinkerSettings()
 	{
-		final Map< String, Object > lSettings = getDefaultLinkerSettings( trackmate.getSettings().values.getLinker().getName() );
+		final Map< String, Object > lSettings = getDefaultLinkerSettings( trackmate.getSettings().values.getLinker() );
 		trackmate.getSettings().linkerSettings( lSettings );
 	}
 
-	private Map< String, Object > getDefaultLinkerSettings( final String className )
+	private Map< String, Object > getDefaultLinkerSettings( final Class< ? extends SpotLinkerOp > linkerCl )
 	{
-		switch ( className )
-		{
-		default:
-		case "org.mastodon.tracking.mamut.linking.SparseLAPLinkerMamut":
-		case "org.mastodon.tracking.mamut.linking.SimpleSparseLAPLinkerMamut":
-			return LinkingUtils.getDefaultLAPSettingsMap();
-		case "org.mastodon.tracking.mamut.linking.KalmanLinkerMamut":
-			return KalmanLinkerMamut.getDefaultSettingsMap();
-		}
+		// Instantiate a dummy detector.
+		final Model model = trackmate.getModel();
+		final LinkCostFeature linkCostFeature = LinkCostFeature.getOrRegister(
+				model.getFeatureModel(), model.getGraph().edges().getRefPool() );
+		final OpService ops = trackmate.getContext().getService( OpService.class );
+
+		final SpotLinkerOp linker =
+				( SpotLinkerOp ) Inplaces.binary1( ops, linkerCl, model.getGraph(),
+						model.getSpatioTemporalIndex(),
+						new HashMap< String, Object >(),
+						model.getFeatureModel(),
+						linkCostFeature );
+		return linker.getDefaultSettings();
 	}
 
 	/**
@@ -283,7 +299,7 @@ public class TrackMateProxy
 			final String settingsParamLine = "    %-40s %-20s %-20s\n";
 			str.append( String.format( settingsParamLine, "Name", "Type", "Default value" ) );
 			str.append( String.format( settingsParamLine, line( "Name".length() ), line( "Type".length() ), line( "Default value".length() ) ) );
-			final Map< String, Object > settings = getDefaultDetectorSettings( detectorprovider.getClasses().get( i ).getName() );
+			final Map< String, Object > settings = getDefaultDetectorSettings( detectorprovider.getClasses().get( i ) );
 			final List< String > keys = new ArrayList<>( settings.keySet() );
 			keys.sort( null );
 			for ( final String key : keys )
@@ -324,7 +340,7 @@ public class TrackMateProxy
 			final String settingsParamLine = "    %-40s %-20s %-20s\n";
 			str.append( String.format( settingsParamLine, "Name", "Type", "Default value" ) );
 			str.append( String.format( settingsParamLine, line( "Name".length() ), line( "Type".length() ), line( "Default value".length() ) ) );
-			final Map< String, Object > settings = getDefaultLinkerSettings( linkerprovider.getClasses().get( i ).getName() );
+			final Map< String, Object > settings = getDefaultLinkerSettings( linkerprovider.getClasses().get( i ) );
 			final List< String > keys = new ArrayList<>( settings.keySet() );
 			keys.sort( null );
 			for ( final String key : keys )
