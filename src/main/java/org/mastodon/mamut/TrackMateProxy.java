@@ -76,10 +76,17 @@ public class TrackMateProxy
 	 * 
 	 * @param detector
 	 *            the name of the detector, as returned in
-	 *            {@link #infoDetectors()}.
+	 *            {@link #infoDetectors()}, or <code>null</code> to skip the
+	 *            detection step.
 	 */
 	public void useDetector( final String detector )
 	{
+		if ( detector == null )
+		{
+			trackmate.getSettings().detector( null );
+			return;
+		}
+
 		final PluginProvider< SpotDetectorOp > detectorprovider = new PluginProvider<>( SpotDetectorOp.class );
 		trackmate.context().inject( detectorprovider );
 		final List< String > detectorNames = detectorprovider.getNames();
@@ -140,6 +147,12 @@ public class TrackMateProxy
 	 */
 	public void useLinker( final String linker )
 	{
+		if ( linker == null )
+		{
+			trackmate.getSettings().linker( null );
+			return;
+		}
+
 		final PluginProvider< SpotLinkerOp > linkerprovider = new PluginProvider<>( SpotLinkerOp.class );
 		trackmate.context().inject( linkerprovider );
 		final List< String > linkerNames = linkerprovider.getNames();
