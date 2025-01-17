@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>38.0.1</version>
+		<version>40.0.0</version>
 	</parent>
 	
 	<groupId>org.mastodon</groupId>
@@ -32,11 +32,11 @@
 		<mastodon.group>org.mastodon</mastodon.group>
 		<mastodon-collection.version>1.0.0-beta-29</mastodon-collection.version>
 		<mastodon-graph.version>1.0.0-beta-29</mastodon-graph.version>
-		<mastodon.version>1.0.0-beta-34-SNAPSHOT</mastodon.version>
-		<mastodon-ellipsoid-fitting.version>0.7.1</mastodon-ellipsoid-fitting.version>
-		<mastodon-tracking.version>1.0.0-beta-19-SNAPSHOT</mastodon-tracking.version>
-		<mastodon-selection-creator.version>0.0.11</mastodon-selection-creator.version>
-		<mastodon-pasteur.version>1.0.0-beta-12</mastodon-pasteur.version>
+		<mastodon.version>1.0.0-beta-34</mastodon.version>
+		<mastodon-ellipsoid-fitting.version>0.7.2</mastodon-ellipsoid-fitting.version>
+		<mastodon-tracking.version>1.0.0-beta-19</mastodon-tracking.version>
+		<mastodon-selection-creator.version>0.0.12</mastodon-selection-creator.version>
+		<mastodon-pasteur.version>1.0.0-beta-13</mastodon-pasteur.version>
 		
 		<package-name>org.mastodon</package-name>
 
